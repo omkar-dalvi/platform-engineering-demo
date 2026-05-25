@@ -6,3 +6,13 @@ docker run --name postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=mysecr
 docker build -t platform-engineering-demo .
 
 docker run -e DB_HOST="host.docker.internal" -p 8080:8080 -it platform-engineering-demo
+
+minikube image load platform-engineering-demo:latest
+
+kubectl apply -f kubernetes/
+
+alias kns='kubectl config set-context --current --namespace
+
+kns employee
+
+minikube service backend-service   

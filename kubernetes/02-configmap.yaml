@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: employee
+data:
+  SERVICE_NAME: "platform-engineering-demo"
+  ENVIRONMENT_NAME: "production"
+  PLATFORM_TEAM: "platform-team@gmail.com"
+  DEPLOYMENT_VERSION: "0.1.0"
+  DEPLOYMENT_TAG: "latest"
+  DEPLOYMENT_BUILD_DATE: "2026-05-26"
+  DB_HOST: "postgres-service"
+  DB_PORT: "5432"
+  DB_NAME: "employee"
+  DB_USER: "postgres"
+  PORT: "8080"
