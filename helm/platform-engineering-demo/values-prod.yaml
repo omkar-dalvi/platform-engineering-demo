@@ -1,0 +1,76 @@
+# Production environment values
+# Usage: helm install -f values-prod.yaml
+
+namespace:
+  name: employee-prod
+  create: true
+
+app:
+  name: platform-engineering-demo
+  environment: production
+  version: "0.1.0"
+
+backend:
+  replicas: 3
+  image:
+    repository: platform-engineering-demo
+    tag: "0.1.0"
+    pullPolicy: IfNotPresent
+
+  port: 8080
+
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "500m"
+    limits:
+      memory: "1Gi"
+      cpu: "1000m"
+
+  service:
+    type: ClusterIP
+    port: 8080
+
+postgresql:
+  enabled: true
+  replicas: 1
+  image:
+    repository: postgres
+    tag: "15-alpine"
+    pullPolicy: IfNotPresent
+
+  resources:
+    requests:
+      memory: "512Mi"
+      cpu: "500m"
+    limits:
+      memory: "1Gi"
+      cpu: "1000m"
+
+  persistence:
+    enabled: true
+    size: 10Gi
+    accessMode: ReadWriteOnce
+
+database:
+  name: employee_prod
+  user: postgres
+
+ingress:
+  enabled: true
+  className: standard
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/rate-limit: "500"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+
+  hosts:
+    - host: api.production.local
+      paths:
+        - path: /
+          pathType: Prefix
+    - host: platform-engineering-demo.local
+      paths:
+        - path: /
+          pathType: Prefix

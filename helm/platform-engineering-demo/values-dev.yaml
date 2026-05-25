@@ -1,0 +1,74 @@
+# Development environment values
+# Usage: helm install -f values-dev.yaml
+
+namespace:
+  name: employee-dev
+  create: true
+
+app:
+  name: platform-engineering-demo
+  environment: development
+  version: "0.1.0"
+
+backend:
+  replicas: 1
+  image:
+    repository: platform-engineering-demo
+    tag: latest
+    pullPolicy: IfNotPresent
+
+  port: 8080
+
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "200m"
+
+  service:
+    type: NodePort
+    port: 8080
+
+postgresql:
+  enabled: true
+  replicas: 1
+  image:
+    repository: postgres
+    tag: "15-alpine"
+    pullPolicy: IfNotPresent
+
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "100m"
+    limits:
+      memory: "256Mi"
+      cpu: "200m"
+
+  persistence:
+    enabled: true
+    size: 500Mi
+    accessMode: ReadWriteOnce
+
+database:
+  name: employee_dev
+  user: postgres
+
+ingress:
+  enabled: true
+  className: standard
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+
+  hosts:
+    - host: api-dev.minikube.local
+      paths:
+        - path: /
+          pathType: Prefix
+    - host: dev.platform-engineering-demo.local
+      paths:
+        - path: /
+          pathType: Prefix

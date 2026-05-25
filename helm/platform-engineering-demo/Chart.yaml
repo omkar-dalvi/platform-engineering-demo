@@ -1,0 +1,14 @@
+apiVersion: v2
+name: platform-engineering-demo
+description: A Helm chart for deploying Flask platform engineering demo with PostgreSQL on Kubernetes
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+keywords:
+  - flask
+  - postgresql
+  - kubernetes
+  - platform-engineering
+maintainers:
+  - name: Platform Team
+    email: platform-team@gmail.com

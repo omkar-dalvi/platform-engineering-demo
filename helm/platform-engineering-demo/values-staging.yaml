@@ -1,0 +1,75 @@
+# Staging environment values
+# Usage: helm install -f values-staging.yaml
+
+namespace:
+  name: employee-staging
+  create: true
+
+app:
+  name: platform-engineering-demo
+  environment: staging
+  version: "0.1.0"
+
+backend:
+  replicas: 2
+  image:
+    repository: platform-engineering-demo
+    tag: "0.1.0"
+    pullPolicy: IfNotPresent
+
+  port: 8080
+
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+  service:
+    type: ClusterIP
+    port: 8080
+
+postgresql:
+  enabled: true
+  replicas: 1
+  image:
+    repository: postgres
+    tag: "15-alpine"
+    pullPolicy: IfNotPresent
+
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+  persistence:
+    enabled: true
+    size: 2Gi
+    accessMode: ReadWriteOnce
+
+database:
+  name: employee_staging
+  user: postgres
+
+ingress:
+  enabled: true
+  className: standard
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/rate-limit: "100"
+
+  hosts:
+    - host: api-staging.minikube.local
+      paths:
+        - path: /
+          pathType: Prefix
+    - host: staging.platform-engineering-demo.local
+      paths:
+        - path: /
+          pathType: Prefix

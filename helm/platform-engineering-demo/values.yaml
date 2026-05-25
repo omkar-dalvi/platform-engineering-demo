@@ -1,0 +1,117 @@
+# Default values for platform-engineering-demo
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Global namespace configuration
+namespace:
+  name: employee
+  create: true
+
+# Application configuration
+app:
+  name: platform-engineering-demo
+  environment: production
+  version: "0.1.0"
+
+# Service configuration
+service:
+  name: platform-team@gmail.com
+  team: platform-team@gmail.com
+  buildDate: "2026-05-26"
+
+# Backend deployment configuration
+backend:
+  replicas: 2
+  image:
+    repository: platform-engineering-demo
+    tag: latest
+    pullPolicy: IfNotPresent
+
+  port: 8080
+
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+  livenessProbe:
+    enabled: true
+    path: /health
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
+
+  readinessProbe:
+    enabled: true
+    path: /health
+    initialDelaySeconds: 5
+    periodSeconds: 5
+    timeoutSeconds: 3
+    failureThreshold: 2
+
+  service:
+    type: LoadBalancer
+    port: 8080
+
+# PostgreSQL configuration
+postgresql:
+  enabled: true
+  replicas: 1
+  image:
+    repository: postgres
+    tag: "15-alpine"
+    pullPolicy: IfNotPresent
+
+  port: 5432
+
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "250m"
+    limits:
+      memory: "512Mi"
+      cpu: "500m"
+
+  persistence:
+    enabled: true
+    size: 1Gi
+    accessMode: ReadWriteOnce
+
+  service:
+    type: ClusterIP
+    port: 5432
+
+# Database configuration
+database:
+  name: employee
+  user: postgres
+  # Password should be provided via secrets, not hardcoded
+
+# Ingress configuration
+ingress:
+  enabled: true
+  className: standard
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, DELETE, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "Content-Type, Authorization"
+
+  hosts:
+    - host: api.minikube.local
+      paths:
+        - path: /
+          pathType: Prefix
+    - host: platform-engineering-demo.local
+      paths:
+        - path: /
+          pathType: Prefix
+    - host: localhost
+      paths:
+        - path: /
+          pathType: Prefix

@@ -1,0 +1,59 @@
+{{- if .Values.postgresql.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.app.name }}-postgres
+  namespace: {{ .Values.namespace.name }}
+spec:
+  replicas: {{ .Values.postgresql.replicas }}
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: "{{ .Values.postgresql.image.repository }}:{{ .Values.postgresql.image.tag }}"
+        imagePullPolicy: {{ .Values.postgresql.image.pullPolicy }}
+        ports:
+        - containerPort: {{ .Values.postgresql.port }}
+          name: postgres
+        env:
+        - name: POSTGRES_DB
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.app.name }}-config
+              key: DB_NAME
+        - name: POSTGRES_USER
+          valueFrom:
+            configMapKeyRef:
+              name: {{ .Values.app.name }}-config
+              key: DB_USER
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.app.name }}-postgres-secret
+              key: POSTGRES_PASSWORD
+        volumeMounts:
+        - name: postgres-storage
+          mountPath: /var/lib/postgresql
+        resources:
+          requests:
+            memory: {{ .Values.postgresql.resources.requests.memory | quote }}
+            cpu: {{ .Values.postgresql.resources.requests.cpu | quote }}
+          limits:
+            memory: {{ .Values.postgresql.resources.limits.memory | quote }}
+            cpu: {{ .Values.postgresql.resources.limits.cpu | quote }}
+      volumes:
+      {{- if .Values.postgresql.persistence.enabled }}
+      - name: postgres-storage
+        persistentVolumeClaim:
+          claimName: {{ .Values.app.name }}-postgres-pvc
+      {{- else }}
+      - name: postgres-storage
+        emptyDir: {}
+      {{- end }}
+{{- end }}

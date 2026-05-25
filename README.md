@@ -11,8 +11,24 @@ minikube image load platform-engineering-demo:latest
 
 kubectl apply -f kubernetes/
 
-alias kns='kubectl config set-context --current --namespace
+alias kns='kubectl config set-context --current --namespace'
 
 kns employee
 
-minikube service backend-service   
+minikube service backend-service -n employee
+
+Helm
+helm install platform-demo helm/platform-engineering-demo/ \      
+  -f helm/platform-engineering-demo/values-dev.yaml \
+  -n employee-dev \
+--create-namespace
+
+helm install platform-demo helm/platform-engineering-demo/ \      
+  -f helm/platform-engineering-demo/values-staging.yaml \
+  -n employee-staging \
+--create-namespace
+
+helm install platform-demo helm/platform-engineering-demo/ \      
+  -f helm/platform-engineering-demo/values-prod.yaml \
+  -n employee-prod \
+--create-namespace
