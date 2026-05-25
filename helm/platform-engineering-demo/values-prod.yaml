@@ -74,3 +74,10 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
+
+# HPA (Horizontal Pod Autoscaler) configuration for backend
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50
