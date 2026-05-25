@@ -3,4 +3,4 @@ name = "platform-engineering-demo"
 version = "0.1.0"
 description = "A simple Flask-based platform engineering demo API"
 requires-python = ">=3.12"
-dependencies = ["Flask==3.0.0"]
+dependencies = ["Flask", "psycopg2-binary"]

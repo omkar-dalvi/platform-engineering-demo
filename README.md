@@ -1,2 +1,8 @@
 # platform-engineering-demo
 Repo to demonstrate basics of Platform engineering
+
+docker run --name postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=mysecretpassword -e POSTGRES_DB=employee -p 5432:5432 -d postgres
+
+docker build -t platform-engineering-demo .
+
+docker run -e DB_HOST="host.docker.internal" -p 8080:8080 -it platform-engineering-demo
