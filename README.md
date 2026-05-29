@@ -32,3 +32,5 @@ helm install platform-demo helm/platform-engineering-demo/ \
   -f helm/platform-engineering-demo/values-prod.yaml \
   -n employee-prod \
 --create-namespace
+
+eval $(minikube docker-env)

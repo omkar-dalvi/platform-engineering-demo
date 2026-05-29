@@ -15,4 +15,4 @@ COPY app ./app
 
 EXPOSE 8080
 
-CMD ["uv", "run", "python", "-m", "app.main"]
+CMD ["uv", "run", "python", "-m", "app/main.py"]

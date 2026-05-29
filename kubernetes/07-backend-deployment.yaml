@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: localhost/platform-engineering-demo:latest 
+          image: platform-engineering-demo:latest 
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
